@@ -3,9 +3,9 @@ from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool
 from datetime import datetime
 
-def save_to_txt(data: str, filename: str = "research_output.txt"):
+def save_to_txt(data: str, filename: str = "Response_Output.txt"):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    formatted_text = f"--- Research Output ---\nTimestamp: {timestamp}\n\n{data}\n\n"
+    formatted_text = f"--- Agent Response Output ---\nTimestamp: {timestamp}\n\n{data}\n\n"
 
     with open(filename, "a", encoding="utf-8") as f:
         f.write(formatted_text)
@@ -21,6 +21,7 @@ company_faq = {
     "delivery time": "Orders ship Monday through Saturday with the exception of national holidays. Orders with expedited delivery must reach us before 2 p.m. (Eastern Standard Time) to ship same day. However, individual shipments may take up to 3 to business days."
 }
 
+# Function to look up company information based on user query
 def company_info_lookup(question: str):
     question = question.lower()
     for k, v in company_faq.items():
@@ -37,13 +38,14 @@ company_info_tool = Tool(
 )
 
 
-
+# Save tool to save responses into a text file
 save_tool = Tool(
     name="save_text_to_file",
     func=save_to_txt,
     description="Saves structured research data to a text file.",
 )
 
+# Search tool to search the web for information
 search = DuckDuckGoSearchRun()
 search_tool = Tool(
     name="search",
